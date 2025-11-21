@@ -12,7 +12,7 @@ import type { Note } from "../../types/note";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
 import SearchBox from "../SearchBox/SearchBox";
-import { useDebouncedCallback } from 'use-debounce';
+import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
@@ -67,12 +67,13 @@ function App() {
     createMutation.mutate(note);
   };
 
-  const handleSearchChange = useDebouncedCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentPage(1);
-    setSearchQuery(event.target.value);
-  }, 300);
-
-  
+  const handleSearchChange = useDebouncedCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCurrentPage(1);
+      setSearchQuery(event.target.value);
+    },
+    300,
+  );
 
   return (
     <div className={css.app}>

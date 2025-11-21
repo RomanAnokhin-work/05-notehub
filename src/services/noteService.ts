@@ -22,8 +22,13 @@ interface DeleteNoteResponse {
   message: string;
 }
 
-async function fetchNotes(currentPage: number, searchQuery: string): Promise<FetchNotesResponse> {
-  const { data } = await instance.get<FetchNotesResponse>(`/notes?page=${currentPage}&perPage=12&search=${searchQuery}`);
+async function fetchNotes(
+  currentPage: number,
+  searchQuery: string,
+): Promise<FetchNotesResponse> {
+  const { data } = await instance.get<FetchNotesResponse>(
+    `/notes?page=${currentPage}&perPage=12&search=${searchQuery}`,
+  );
   return data;
 }
 
@@ -37,8 +42,4 @@ async function deleteNote(id: string): Promise<DeleteNoteResponse> {
   return data;
 }
 
-export  {
-  fetchNotes,
-  createNote,
-  deleteNote,
-};
+export { fetchNotes, createNote, deleteNote };

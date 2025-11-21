@@ -42,7 +42,7 @@ function Modal({ onClose, onCreate }: ModalProps) {
         <NoteForm onClose={onClose} onCreate={onCreate} />
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }
 

@@ -1,4 +1,4 @@
-import { Field, Form, Formik, ErrorMessage,  type FormikHelpers } from "formik";
+import { Field, Form, Formik, ErrorMessage, type FormikHelpers } from "formik";
 import css from "./NoteForm.module.css";
 import { useId } from "react";
 import * as Yup from "yup";
@@ -9,12 +9,11 @@ const NoteFormSchema = Yup.object().shape({
     .min(3, "Title must be at least 3 characters")
     .max(50, "Title must be at most 50 characters")
     .required("Title is required"),
-  content: Yup.string()
-    .max(500, "Content must be at most 500 characters"),
+  content: Yup.string().max(500, "Content must be at most 500 characters"),
   tag: Yup.string()
     .oneOf(["Todo", "Work", "Personal", "Meeting", "Shopping"], "Invalid tag")
-    .required("Tag is required")
-})
+    .required("Tag is required"),
+});
 
 interface NoteFormProps {
   onClose: () => void;
@@ -23,21 +22,25 @@ interface NoteFormProps {
 
 function NoteForm({ onClose, onCreate }: NoteFormProps) {
   const fieldId = useId();
-  
+
   const initialValues: Note = {
-    title: '',
-    content: '',
-    tag: 'Todo'
-  }
+    title: "",
+    content: "",
+    tag: "Todo",
+  };
 
   const handleSubmit = (note: Note, actions: FormikHelpers<Note>) => {
     onCreate(note);
     actions.resetForm();
     onClose();
-  }
+  };
 
   return (
-    <Formik initialValues={initialValues} validationSchema={NoteFormSchema} onSubmit={handleSubmit}>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={NoteFormSchema}
+      onSubmit={handleSubmit}
+    >
       <Form className={css.form}>
         <fieldset className={css.formGroup}>
           <label htmlFor={`${fieldId}-title`}>Title</label>
@@ -83,7 +86,7 @@ function NoteForm({ onClose, onCreate }: NoteFormProps) {
           <button type="button" className={css.cancelButton} onClick={onClose}>
             Cancel
           </button>
-          <button type="submit" className={css.submitButton} disabled={false} >
+          <button type="submit" className={css.submitButton} disabled={false}>
             Create note
           </button>
         </fieldset>
