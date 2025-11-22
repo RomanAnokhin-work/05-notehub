@@ -16,24 +16,40 @@ interface FetchNotesResponse {
 }
 
 interface CreateNoteResponse {
-  message: string;
+  note: Note;
 }
+
 interface DeleteNoteResponse {
-  message: string;
+  note: Note;
+}
+
+interface CreateNoteRequest {
+  title: string;
+  content: string;
+  tag: string;
 }
 
 async function fetchNotes(
   currentPage: number,
   searchQuery: string,
 ): Promise<FetchNotesResponse> {
-  const { data } = await instance.get<FetchNotesResponse>(
-    `/notes?page=${currentPage}&perPage=12&search=${searchQuery}`,
-  );
+  const params: { page: number; perPage: number; search?: string } = {
+    page: currentPage,
+    perPage: 12,
+  };
+
+  if (searchQuery.trim() !== "") {
+    params.search = searchQuery;
+  }
+
+  const { data } = await instance.get<FetchNotesResponse>(`/notes`, { params });
   return data;
 }
 
-async function createNote(note: Note): Promise<CreateNoteResponse> {
-  const { data } = await instance.post<CreateNoteResponse>("/notes", note);
+async function createNote(
+  noteData: CreateNoteRequest,
+): Promise<CreateNoteResponse> {
+  const { data } = await instance.post<CreateNoteResponse>("/notes", noteData);
   return data;
 }
 

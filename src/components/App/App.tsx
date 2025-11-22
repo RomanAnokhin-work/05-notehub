@@ -1,13 +1,8 @@
 import { useState } from "react";
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import NoteList from "../NoteList/NoteList";
 import css from "./App.module.css";
-import { createNote, deleteNote, fetchNotes } from "../../services/noteService";
+import { fetchNotes } from "../../services/noteService";
 import type { Note } from "../../types/note";
 import Pagination from "../Pagination/Pagination";
 import Modal from "../Modal/Modal";
@@ -15,6 +10,7 @@ import SearchBox from "../SearchBox/SearchBox";
 import { useDebouncedCallback } from "use-debounce";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import NoteForm from "../NoteForm/NoteForm";
 
 function App() {
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -40,31 +36,6 @@ function App() {
 
   const closeModal = () => {
     setIsModalOpen(false);
-  };
-
-  const queryClient = useQueryClient();
-
-  const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteNote(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes", currentPage] });
-    },
-  });
-
-  const handleDelete = (id: string) => {
-    deleteMutation.mutate(id);
-  };
-
-  const createMutation = useMutation({
-    mutationFn: (note: Note) => createNote(note),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notes", currentPage] });
-      closeModal();
-    },
-  });
-
-  const handleCreate = (note: Note) => {
-    createMutation.mutate(note);
   };
 
   const handleSearchChange = useDebouncedCallback(
@@ -94,8 +65,12 @@ function App() {
       </header>
       {isLoading && <Loader />}
       {isError && <ErrorMessage error={error} />}
-      {notes.length > 0 && <NoteList notes={notes} onDelete={handleDelete} />}
-      {isModalOpen && <Modal onClose={closeModal} onCreate={handleCreate} />}
+      {notes.length > 0 && <NoteList notes={notes} />}
+      {isModalOpen && (
+        <Modal onClose={closeModal}>
+          <NoteForm onClose={closeModal} />
+        </Modal>
+      )}
     </div>
   );
 }
